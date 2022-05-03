@@ -19,9 +19,8 @@ func NewRouter() (*echo.Echo, error) {
 	e.PUT("/computers/:id", controller.UpdateComputer)
 	e.DELETE("/computers/:id", controller.DeleteComputer)
 
-	e.GET("/computers/:id/commands/state", controller.GetState)
-	e.GET("/computers/:id/commands/poweron", controller.SendPowerOn)
-	e.GET("/computers/:id/commands/poweroff", controller.SendPowerOff)
+	e.GET("/computers/:id/power", controller.GetPower)
+	e.PUT("/computers/:id/power", controller.UpdatePower)
 
 	return e, nil
 }

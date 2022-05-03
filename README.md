@@ -102,33 +102,47 @@ DELETE /computers/:id
 
 ### PCの起動状態を取得します
 ```http
-GET /computers/:id/commands/state
+GET /computers/:id/power
 ```
 response
 ```json
 {
-  "result": true
+  "state": "ON or OFF"
 }
 ```
 
 ### PCの電源をONにします
 ```http
-GET /computers/:id/commands/poweron
+PUT /computers/:id/power
+```
+request
+```json
+{
+  "state": "ON"
+}
 ```
 response
 ```json
 {
+  "message": "",
   "result": true
 }
 ```
 
 ### PCの電源をOFFにします
 ```http
-GET /computers/:id/commands/poweroff
+PUT /computers/:id/power
+```
+request
+```json
+{
+  "state": "OFF"
+}
 ```
 response
 ```json
 {
+  "message": "",
   "result": true
 }
 ```

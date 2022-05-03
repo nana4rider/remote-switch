@@ -23,7 +23,11 @@ const (
 	COMMAND_POWEROFF_LINUX   = "sudo systemctl poweroff"
 )
 
-func GetState(c echo.Context) error {
+type PowerState struct {
+	State string `json:"state"`
+}
+
+func GetPower(c echo.Context) error {
 	computer, err := FindComputerById(c)
 	if err != nil {
 		code := http.StatusNotFound
@@ -41,17 +45,31 @@ func GetState(c echo.Context) error {
 	pinger.SetPrivileged(true)
 	err = pinger.Run()
 
-	var result ResBoolError
-	if err == nil {
-		result = ResBoolError{"", pinger.PacketsRecv > 0}
+	s := new(PowerState)
+	if err == nil && pinger.PacketsRecv > 0 {
+		s.State = "ON"
 	} else {
-		result = ResBoolError{err.Error(), false}
+		s.State = "OFF"
 	}
 
-	return c.JSON(http.StatusOK, result)
+	return c.JSON(http.StatusOK, s)
 }
 
-func SendPowerOn(c echo.Context) error {
+func UpdatePower(c echo.Context) error {
+	s := new(PowerState)
+	if err := c.Bind(s); err == nil {
+		switch strings.ToUpper(s.State) {
+		case "ON":
+			return powerOn(c)
+		case "OFF":
+			return powerOff(c)
+		}
+	}
+
+	return c.JSON(http.StatusBadRequest, ResError{"Specify 'ON' or 'OFF' for stete"})
+}
+
+func powerOn(c echo.Context) error {
 	computer, err := FindComputerById(c)
 	if err != nil {
 		code := http.StatusNotFound
@@ -81,7 +99,7 @@ func SendPowerOn(c echo.Context) error {
 	return c.JSON(http.StatusOK, ResBoolError{"", true})
 }
 
-func SendPowerOff(c echo.Context) error {
+func powerOff(c echo.Context) error {
 	computer, err := FindComputerById(c)
 	if err != nil {
 		code := http.StatusNotFound
