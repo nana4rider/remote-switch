@@ -23,7 +23,7 @@ var (
 func FindComputerById(c echo.Context) (*models.Computer, error) {
 	computerID, err := strconv.ParseInt(c.Param("id"), 10, 64)
 	if err != nil {
-		c.Logger().Fatal(err)
+		c.Logger().Error(err)
 		return nil, err
 	}
 
