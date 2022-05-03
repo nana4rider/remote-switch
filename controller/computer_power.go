@@ -21,7 +21,7 @@ import (
 const (
 	// or "shutdown /s /t 0"
 	COMMAND_POWEROFF_WINDOWS = "rundll32.exe powrprof.dll,SetSuspendState 0,1,0"
-	COMMAND_POWEROFF_LINUX   = "sudo systemctl poweroff"
+	COMMAND_POWEROFF_OTHERS  = "sudo shutdown -h now"
 )
 
 type PowerState struct {
@@ -166,21 +166,20 @@ func powerOff(c echo.Context) error {
 	}
 	defer client.Close()
 
-	session, err := client.NewSession()
+	ros, err := getRemoteOS(client)
 	if err != nil {
 		c.Logger().Error(err)
 		return c.JSON(http.StatusInternalServerError, ResError{err.Error()})
 	}
-	defer session.Close()
 
 	var command string
-	if out, err := session.Output("cmd ver"); err == nil && strings.Contains(string(out), "Windows") {
+	if ros == "windows" {
 		command = COMMAND_POWEROFF_WINDOWS
 	} else {
-		command = COMMAND_POWEROFF_LINUX
+		command = COMMAND_POWEROFF_OTHERS
 	}
 
-	session, err = client.NewSession()
+	session, err := client.NewSession()
 	if err != nil {
 		c.Logger().Error(err)
 		return c.JSON(http.StatusInternalServerError, ResError{err.Error()})
@@ -193,4 +192,18 @@ func powerOff(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, ResBoolError{"", true})
+}
+
+func getRemoteOS(client *ssh.Client) (string, error) {
+	session, err := client.NewSession()
+	if err != nil {
+		return "", err
+	}
+	defer session.Close()
+
+	if out, err := session.Output("cmd ver"); err == nil && strings.Contains(string(out), "Windows") {
+		return "windows", nil
+	} else {
+		return "others", nil
+	}
 }
