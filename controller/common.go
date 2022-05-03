@@ -1,11 +1,12 @@
 package controller
 
-type ResBool struct {
-	Result bool `json:"result"`
-}
-
 type ResError struct {
 	Message string `json:"message"`
+}
+
+type ResBoolError struct {
+	Message string `json:"message"`
+	Result  bool   `json:"result"`
 }
 
 type ResValidationError struct {

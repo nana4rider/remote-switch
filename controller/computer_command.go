@@ -41,7 +41,12 @@ func GetState(c echo.Context) error {
 	pinger.SetPrivileged(true)
 	err = pinger.Run()
 
-	result := ResBool{err == nil && pinger.PacketsRecv > 0}
+	var result ResBoolError
+	if err == nil {
+		result = ResBoolError{"", pinger.PacketsRecv > 0}
+	} else {
+		result = ResBoolError{err.Error(), false}
+	}
 
 	return c.JSON(http.StatusOK, result)
 }
@@ -73,7 +78,7 @@ func SendPowerOn(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, ResError{"Failed to send magic packet"})
 	}
 
-	return c.JSON(http.StatusOK, ResBool{true})
+	return c.JSON(http.StatusOK, ResBoolError{"", true})
 }
 
 func SendPowerOff(c echo.Context) error {
@@ -99,14 +104,14 @@ func SendPowerOff(c echo.Context) error {
 	privKey, err := ioutil.ReadFile(sshKey)
 	if err != nil {
 		c.Logger().Error(err)
-		code := http.StatusNotFound
+		code := http.StatusInternalServerError
 		return c.JSON(code, ResError{http.StatusText(code)})
 	}
 
 	signer, err := ssh.ParsePrivateKey(privKey)
 	if err != nil {
 		c.Logger().Error(err)
-		code := http.StatusNotFound
+		code := http.StatusInternalServerError
 		return c.JSON(code, ResError{http.StatusText(code)})
 	}
 
@@ -140,7 +145,7 @@ func SendPowerOff(c echo.Context) error {
 	client, err := ssh.Dial("tcp", sshAddr, sconf)
 	if err != nil {
 		// already off
-		return c.JSON(http.StatusOK, ResBool{false})
+		return c.JSON(http.StatusOK, ResBoolError{err.Error(), false})
 	}
 	defer client.Close()
 
@@ -173,5 +178,5 @@ func SendPowerOff(c echo.Context) error {
 		return c.JSON(code, ResError{http.StatusText(code)})
 	}
 
-	return c.JSON(http.StatusOK, ResBool{true})
+	return c.JSON(http.StatusOK, ResBoolError{"", true})
 }
