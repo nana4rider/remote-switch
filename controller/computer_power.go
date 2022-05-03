@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/user"
 	"path/filepath"
+	"runtime"
 	"strconv"
 	"strings"
 	"time"
@@ -42,7 +43,9 @@ func GetPower(c echo.Context) error {
 
 	pinger.Count = 1
 	pinger.Timeout = time.Second
-	pinger.SetPrivileged(true)
+	if runtime.GOOS == "windows" {
+		pinger.SetPrivileged(true)
+	}
 	err = pinger.Run()
 
 	s := new(PowerState)
