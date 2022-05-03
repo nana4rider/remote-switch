@@ -65,9 +65,11 @@ request
 ```json
 {
   "name": "pc3",
-  "ssh_user": "user3",
   "ip_address": "192.168.1.150",
-  "mac_address": "11:22:33:44:55:99"
+  "ssh_user": "user3",
+  "ssh_key": null, // default $HOME/.ssh/id_rsa
+  "ssh_port": null, // default 22
+  "mac_address": "11:22:33:44:55:99" // default "arp -a ip_address"
 }
 ```
 response
@@ -128,9 +130,3 @@ response
   "result": true
 }
 ```
-
-## その他
-* `ssh_user`を指定しない場合、このAPIを実行しているユーザでSSH接続します。
-* `ssh_key`を指定しない場合、`$HOME/.ssh/id_rsa`を使用します。
-* `ssh_port`を指定しない場合、デフォルトポートでSSH接続します。
-* WOLは常にブロードキャストアドレスに送信します。
