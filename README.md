@@ -111,32 +111,14 @@ response
 }
 ```
 
-### PCの電源をONにします
+### PCの電源状態を変更します
 ```http
 PUT /computers/:id/power
 ```
 request
 ```json
 {
-  "state": "ON"
-}
-```
-response
-```json
-{
-  "message": "",
-  "result": true
-}
-```
-
-### PCの電源をOFFにします
-```http
-PUT /computers/:id/power
-```
-request
-```json
-{
-  "state": "OFF"
+  "state": "ON or OFF"
 }
 ```
 response
