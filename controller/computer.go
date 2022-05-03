@@ -2,13 +2,22 @@ package controller
 
 import (
 	"context"
+	"errors"
 	"net/http"
+	"os/exec"
 	"regexp"
 	"strconv"
+	"strings"
 
 	"github.com/labstack/echo/v4"
 	"github.com/nana4rider/remote-switch/models"
 	"github.com/volatiletech/sqlboiler/v4/boil"
+)
+
+var (
+	reIpAddr     = regexp.MustCompile(`^(([1-9]?[0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([1-9]?[0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$`)
+	reMacAddr    = regexp.MustCompile(`(?i)^[0-9a-f]{2}(:[0-9a-f]{2}){5}$`)
+	reArpMacAddr = regexp.MustCompile(`(?i)([0-9a-f]{2}(?:[:-][0-9a-f]{2}){5})`)
 )
 
 func FindComputerById(c echo.Context) (*models.Computer, error) {
@@ -47,13 +56,19 @@ func CreateComputer(c echo.Context) error {
 		return err
 	}
 
+	if len(computer.MacAddress) == 0 && len(computer.IPAddress) != 0 {
+		if mac, err := setMacAddr(computer.IPAddress); err == nil {
+			computer.MacAddress = mac
+		}
+	}
+
 	if errors := validateComputer(computer); errors.Has() {
 		return c.JSON(http.StatusBadRequest, errors)
 	}
 
 	if err := computer.Insert(context.Background(), boil.GetContextDB(), boil.Infer()); err != nil {
 		c.Logger().Error(err)
-		return c.JSON(http.StatusInternalServerError, ResError{"Create failed"})
+		return c.JSON(http.StatusBadRequest, ResError{err.Error()})
 	}
 
 	if err := computer.Reload(context.Background(), boil.GetContextDB()); err != nil {
@@ -77,11 +92,20 @@ func UpdateComputer(c echo.Context) error {
 	}
 	computer.ID = id
 
+	if len(computer.MacAddress) == 0 && len(computer.IPAddress) != 0 {
+		if mac, err := setMacAddr(computer.IPAddress); err == nil {
+			computer.MacAddress = mac
+		}
+	}
+
 	if errors := validateComputer(computer); errors.Has() {
 		return c.JSON(http.StatusBadRequest, errors)
 	}
 
-	computer.Update(context.Background(), boil.GetContextDB(), boil.Infer())
+	if _, err := computer.Update(context.Background(), boil.GetContextDB(), boil.Infer()); err != nil {
+		c.Logger().Error(err)
+		return c.JSON(http.StatusBadRequest, ResError{err.Error()})
+	}
 
 	return c.String(http.StatusNoContent, "")
 }
@@ -93,13 +117,13 @@ func DeleteComputer(c echo.Context) error {
 		return c.JSON(code, ResError{http.StatusText(code)})
 	}
 
-	computer.Delete(context.Background(), boil.GetContextDB())
+	if _, err := computer.Delete(context.Background(), boil.GetContextDB()); err != nil {
+		c.Logger().Error(err)
+		return c.JSON(http.StatusInternalServerError, ResError{err.Error()})
+	}
 
 	return c.String(http.StatusNoContent, "")
 }
-
-var reIpAddr = regexp.MustCompile(`^(([1-9]?[0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([1-9]?[0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$`)
-var reMacAddr = regexp.MustCompile(`(?i)^[0-9a-f]{2}(:[0-9a-f]{2}){5}$`)
 
 func validateComputer(computer *models.Computer) *ResValidationError {
 	verr := new(ResValidationError)
@@ -117,4 +141,16 @@ func validateComputer(computer *models.Computer) *ResValidationError {
 	}
 
 	return verr
+}
+
+func setMacAddr(ipAddr string) (string, error) {
+	if out, err := exec.Command("arp", "-a", ipAddr).Output(); err == nil {
+		group := reArpMacAddr.FindSubmatch(out)
+		if len(group) > 0 {
+			mac := strings.ReplaceAll(string(group[1]), "-", ":")
+			return mac, nil
+		}
+	}
+
+	return "", errors.New("failed to get")
 }
