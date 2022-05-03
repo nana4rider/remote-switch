@@ -29,8 +29,8 @@ response
     "mac_address": "11:22:33:44:55:66"
   },
   {
-    "id": 1,
-    "name": "pc1",
+    "id": 2,
+    "name": "pc2",
     "ssh_user": "user2",
     "ssh_key": "/path/to/ssh_key",
     "ssh_port": 2222,
