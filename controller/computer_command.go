@@ -95,8 +95,7 @@ func SendPowerOff(c echo.Context) error {
 		homeDir, err := os.UserHomeDir()
 		if err != nil {
 			c.Logger().Error(err)
-			code := http.StatusInternalServerError
-			return c.JSON(code, ResError{http.StatusText(code)})
+			return c.JSON(http.StatusInternalServerError, ResError{err.Error()})
 		}
 		sshKey = filepath.Join(homeDir, ".ssh/id_rsa")
 	}
@@ -104,15 +103,13 @@ func SendPowerOff(c echo.Context) error {
 	privKey, err := ioutil.ReadFile(sshKey)
 	if err != nil {
 		c.Logger().Error(err)
-		code := http.StatusInternalServerError
-		return c.JSON(code, ResError{http.StatusText(code)})
+		return c.JSON(http.StatusInternalServerError, ResError{err.Error()})
 	}
 
 	signer, err := ssh.ParsePrivateKey(privKey)
 	if err != nil {
 		c.Logger().Error(err)
-		code := http.StatusInternalServerError
-		return c.JSON(code, ResError{http.StatusText(code)})
+		return c.JSON(http.StatusInternalServerError, ResError{err.Error()})
 	}
 
 	sconf := &ssh.ClientConfig{
@@ -129,8 +126,7 @@ func SendPowerOff(c echo.Context) error {
 		user, err := user.Current()
 		if err != nil {
 			c.Logger().Error(err)
-			code := http.StatusInternalServerError
-			return c.JSON(code, ResError{http.StatusText(code)})
+			return c.JSON(http.StatusInternalServerError, ResError{err.Error()})
 		}
 		sconf.User = user.Username
 	}
@@ -152,8 +148,7 @@ func SendPowerOff(c echo.Context) error {
 	session, err := client.NewSession()
 	if err != nil {
 		c.Logger().Error(err)
-		code := http.StatusInternalServerError
-		return c.JSON(code, ResError{http.StatusText(code)})
+		return c.JSON(http.StatusInternalServerError, ResError{err.Error()})
 	}
 	defer session.Close()
 
@@ -167,15 +162,13 @@ func SendPowerOff(c echo.Context) error {
 	session, err = client.NewSession()
 	if err != nil {
 		c.Logger().Error(err)
-		code := http.StatusInternalServerError
-		return c.JSON(code, ResError{http.StatusText(code)})
+		return c.JSON(http.StatusInternalServerError, ResError{err.Error()})
 	}
 	defer session.Close()
 
 	if err = session.Run(command); err != nil {
 		c.Logger().Error(err)
-		code := http.StatusInternalServerError
-		return c.JSON(code, ResError{http.StatusText(code)})
+		return c.JSON(http.StatusInternalServerError, ResError{err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, ResBoolError{"", true})
