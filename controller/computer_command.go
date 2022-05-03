@@ -166,7 +166,7 @@ func SendPowerOff(c echo.Context) error {
 	}
 	defer session.Close()
 
-	if err = session.Run(command); err != nil {
+	if err = session.Start(command); err != nil {
 		c.Logger().Error(err)
 		return c.JSON(http.StatusInternalServerError, ResError{err.Error()})
 	}
