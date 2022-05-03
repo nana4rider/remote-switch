@@ -1,0 +1,3 @@
+# sqlboiler sqlite3
+sqlite3:
+  dbname: "./database/sqlite3.db"
