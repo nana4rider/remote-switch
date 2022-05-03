@@ -17,7 +17,7 @@ PCの電源をON/OFFするためのAPIです。
 GET /computers
 ```
 response
-```json
+```json5
 [
   {
     "id": 1,
@@ -45,7 +45,7 @@ response
 GET /computers/:id
 ```
 response
-```json
+```json5
 {
   "id": 1,
   "name": "pc1",
@@ -62,7 +62,7 @@ response
 POST /computers
 ```
 request
-```json
+```json5
 {
   "name": "pc3",
   "ip_address": "192.168.1.150",
@@ -73,7 +73,7 @@ request
 }
 ```
 response
-```json
+```json5
 {
   "id": 3,
   "name": "pc3",
@@ -90,7 +90,7 @@ response
 PUT /computers/:id
 ```
 request
-```json
+```json5
 {
   "ssh_user": "user3_2",
   "ip_address": "192.168.1.151"
@@ -107,7 +107,7 @@ DELETE /computers/:id
 GET /computers/:id/power
 ```
 response
-```json
+```json5
 {
   "state": "ON or OFF"
 }
@@ -118,13 +118,13 @@ response
 PUT /computers/:id/power
 ```
 request
-```json
+```json5
 {
   "state": "ON or OFF"
 }
 ```
 response
-```json
+```json5
 {
   "message": "",
   "result": true
