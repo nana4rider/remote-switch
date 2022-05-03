@@ -17,6 +17,12 @@ import (
 	"golang.org/x/crypto/ssh"
 )
 
+const (
+	// or "shutdown /s /t 0"
+	COMMAND_POWEROFF_WINDOWS = "rundll32.exe powrprof.dll,SetSuspendState 0,1,0"
+	COMMAND_POWEROFF_LINUX   = "sudo systemctl poweroff"
+)
+
 func GetState(c echo.Context) error {
 	computer, err := FindComputerById(c)
 	if err != nil {
@@ -148,10 +154,9 @@ func SendPowerOff(c echo.Context) error {
 
 	var command string
 	if out, err := session.Output("ver"); err == nil && strings.Contains(string(out), "Microsoft Windows") {
-		command = "rundll32.exe powrprof.dll,SetSuspendState 0,1,0"
-		// command = "shutdown /s /t 0"
+		command = COMMAND_POWEROFF_WINDOWS
 	} else {
-		command = "sudo shutdown now"
+		command = COMMAND_POWEROFF_LINUX
 	}
 
 	session, err = client.NewSession()
