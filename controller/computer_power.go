@@ -174,7 +174,7 @@ func powerOff(c echo.Context) error {
 	defer session.Close()
 
 	var command string
-	if out, err := session.Output("ver"); err == nil && strings.Contains(string(out), "Microsoft Windows") {
+	if out, err := session.Output("cmd ver"); err == nil && strings.Contains(string(out), "Windows") {
 		command = COMMAND_POWEROFF_WINDOWS
 	} else {
 		command = COMMAND_POWEROFF_LINUX
