@@ -57,7 +57,7 @@ func CreateComputer(c echo.Context) error {
 	}
 
 	if len(computer.MacAddress) == 0 && len(computer.IPAddress) != 0 {
-		if mac, err := setMacAddr(computer.IPAddress); err == nil {
+		if mac, err := getMacAddr(computer.IPAddress); err == nil {
 			computer.MacAddress = mac
 		}
 	}
@@ -93,7 +93,7 @@ func UpdateComputer(c echo.Context) error {
 	computer.ID = id
 
 	if len(computer.MacAddress) == 0 && len(computer.IPAddress) != 0 {
-		if mac, err := setMacAddr(computer.IPAddress); err == nil {
+		if mac, err := getMacAddr(computer.IPAddress); err == nil {
 			computer.MacAddress = mac
 		}
 	}
@@ -143,7 +143,7 @@ func validateComputer(computer *models.Computer) *ResValidationError {
 	return verr
 }
 
-func setMacAddr(ipAddr string) (string, error) {
+func getMacAddr(ipAddr string) (string, error) {
 	if out, err := exec.Command("arp", "-a", ipAddr).Output(); err == nil {
 		group := reArpMacAddr.FindSubmatch(out)
 		if len(group) > 0 {
