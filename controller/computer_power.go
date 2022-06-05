@@ -15,6 +15,7 @@ import (
 	"github.com/go-ping/ping"
 	"github.com/labstack/echo/v4"
 	"github.com/linde12/gowol"
+	"github.com/nana4rider/remote-switch/models"
 	"golang.org/x/crypto/ssh"
 )
 
@@ -35,10 +36,22 @@ func GetPower(c echo.Context) error {
 		return c.JSON(code, ResError{http.StatusText(code)})
 	}
 
+	state, err := getPowerState(c, computer)
+	if err != nil {
+		return err
+	}
+
+	s := new(PowerState)
+	s.State = state
+
+	return c.JSON(http.StatusOK, s)
+}
+
+func getPowerState(c echo.Context, computer *models.Computer) (string, error) {
 	ping.NewPinger(computer.IPAddress)
 	pinger, err := ping.NewPinger(computer.IPAddress)
 	if err != nil {
-		return err
+		return "", err
 	}
 
 	pinger.Count = 1
@@ -48,37 +61,44 @@ func GetPower(c echo.Context) error {
 	}
 	err = pinger.Run()
 
-	s := new(PowerState)
 	if err == nil && pinger.PacketsRecv > 0 {
-		s.State = "ON"
+		return "ON", nil
 	} else {
-		s.State = "OFF"
+		return "OFF", nil
 	}
-
-	return c.JSON(http.StatusOK, s)
 }
 
 func UpdatePower(c echo.Context) error {
 	s := new(PowerState)
 	if err := c.Bind(s); err == nil {
+		computer, err := FindComputerById(c)
+		if err != nil {
+			code := http.StatusNotFound
+			return c.JSON(code, ResError{http.StatusText(code)})
+		}
+
 		switch strings.ToUpper(s.State) {
 		case "ON":
-			return powerOn(c)
+			return powerOn(c, computer)
 		case "OFF":
-			return powerOff(c)
+			return powerOff(c, computer)
+		case "TOGGLE":
+			state, err := getPowerState(c, computer)
+			if err != nil {
+				return err
+			}
+			if state == "ON" {
+				return powerOff(c, computer)
+			} else {
+				return powerOn(c, computer)
+			}
 		}
 	}
 
-	return c.JSON(http.StatusBadRequest, ResError{"Specify 'ON' or 'OFF' for stete"})
+	return c.JSON(http.StatusBadRequest, ResError{"Specify 'ON' or 'OFF' or 'TOGGLE.' for stete"})
 }
 
-func powerOn(c echo.Context) error {
-	computer, err := FindComputerById(c)
-	if err != nil {
-		code := http.StatusNotFound
-		return c.JSON(code, ResError{http.StatusText(code)})
-	}
-
+func powerOn(c echo.Context, computer *models.Computer) error {
 	packet, err := gowol.NewMagicPacket(computer.MacAddress)
 	if err != nil {
 		c.Logger().Error(err)
@@ -102,13 +122,7 @@ func powerOn(c echo.Context) error {
 	return c.JSON(http.StatusOK, ResBoolError{"", true})
 }
 
-func powerOff(c echo.Context) error {
-	computer, err := FindComputerById(c)
-	if err != nil {
-		code := http.StatusNotFound
-		return c.JSON(code, ResError{http.StatusText(code)})
-	}
-
+func powerOff(c echo.Context, computer *models.Computer) error {
 	var sshKey string
 	if computer.SSHKey.Valid {
 		sshKey = computer.SSHKey.String

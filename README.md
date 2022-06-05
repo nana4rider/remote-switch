@@ -120,7 +120,7 @@ PUT /computers/:id/power
 request
 ```json5
 {
-  "state": "ON or OFF"
+  "state": "ON or OFF or TOGGLE"
 }
 ```
 response
