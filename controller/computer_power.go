@@ -191,9 +191,9 @@ func powerOff(c echo.Context, computer *models.Computer) error {
 	var command string
 	out, err := session.Output("uname")
 	var os = string(out)
-	if err != nil && strings.Contains(os, "Linux") {
+	if err == nil && strings.Contains(os, "Linux") {
 		command = COMMAND_POWEROFF_LINUX
-	} else if err != nil && strings.Contains(os, "Darwin") {
+	} else if err == nil && strings.Contains(os, "Darwin") {
 		command = COMMAND_POWEROFF_MAC
 	} else {
 		command = COMMAND_POWEROFF_WINDOWS
