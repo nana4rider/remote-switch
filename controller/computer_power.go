@@ -23,7 +23,7 @@ const (
 	// or "shutdown /s /t 0"
 	COMMAND_POWEROFF_WINDOWS = "rundll32.exe powrprof.dll,SetSuspendState 0,1,0"
 	COMMAND_POWEROFF_LINUX   = "sudo shutdown -h now"
-	COMMAND_POWEROFF_MAC     = "pmset sleepnow"
+	COMMAND_POWEROFF_MAC     = "sudo pmset sleepnow"
 )
 
 type PowerState struct {
