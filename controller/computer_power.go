@@ -22,7 +22,7 @@ import (
 const (
 	// or "shutdown /s /t 0"
 	COMMAND_POWEROFF_WINDOWS = "rundll32.exe powrprof.dll,SetSuspendState 0,1,0"
-	COMMAND_POWEROFF_LINUX   = "sudo systemctl poweroff"
+	COMMAND_POWEROFF_UNIX    = "sudo shutdown -h now"
 )
 
 type PowerState struct {
@@ -191,7 +191,7 @@ func powerOff(c echo.Context, computer *models.Computer) error {
 	if out, err := session.Output("cmd ver"); err == nil && strings.Contains(string(out), "Windows") {
 		command = COMMAND_POWEROFF_WINDOWS
 	} else {
-		command = COMMAND_POWEROFF_LINUX
+		command = COMMAND_POWEROFF_UNIX
 	}
 
 	session, err = client.NewSession()
