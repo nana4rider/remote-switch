@@ -1,7 +1,7 @@
 DROP TABLE computers;
 
 CREATE TABLE computers(
-  id integer not null,
+  id integer not null auto_increment,
   name text not null,
   ssh_user text,
   ssh_key text,

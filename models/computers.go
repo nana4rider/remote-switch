@@ -24,11 +24,11 @@ import (
 
 // Computer is an object representing the database table.
 type Computer struct {
-	ID         int64       `boil:"id" json:"id" toml:"id" yaml:"id"`
+	ID         int         `boil:"id" json:"id" toml:"id" yaml:"id"`
 	Name       string      `boil:"name" json:"name" toml:"name" yaml:"name"`
 	SSHUser    null.String `boil:"ssh_user" json:"ssh_user,omitempty" toml:"ssh_user" yaml:"ssh_user,omitempty"`
 	SSHKey     null.String `boil:"ssh_key" json:"ssh_key,omitempty" toml:"ssh_key" yaml:"ssh_key,omitempty"`
-	SSHPort    null.Int64  `boil:"ssh_port" json:"ssh_port,omitempty" toml:"ssh_port" yaml:"ssh_port,omitempty"`
+	SSHPort    null.Int    `boil:"ssh_port" json:"ssh_port,omitempty" toml:"ssh_port" yaml:"ssh_port,omitempty"`
 	IPAddress  string      `boil:"ip_address" json:"ip_address" toml:"ip_address" yaml:"ip_address"`
 	MacAddress string      `boil:"mac_address" json:"mac_address" toml:"mac_address" yaml:"mac_address"`
 
@@ -74,22 +74,22 @@ var ComputerTableColumns = struct {
 
 // Generated where
 
-type whereHelperint64 struct{ field string }
+type whereHelperint struct{ field string }
 
-func (w whereHelperint64) EQ(x int64) qm.QueryMod  { return qmhelper.Where(w.field, qmhelper.EQ, x) }
-func (w whereHelperint64) NEQ(x int64) qm.QueryMod { return qmhelper.Where(w.field, qmhelper.NEQ, x) }
-func (w whereHelperint64) LT(x int64) qm.QueryMod  { return qmhelper.Where(w.field, qmhelper.LT, x) }
-func (w whereHelperint64) LTE(x int64) qm.QueryMod { return qmhelper.Where(w.field, qmhelper.LTE, x) }
-func (w whereHelperint64) GT(x int64) qm.QueryMod  { return qmhelper.Where(w.field, qmhelper.GT, x) }
-func (w whereHelperint64) GTE(x int64) qm.QueryMod { return qmhelper.Where(w.field, qmhelper.GTE, x) }
-func (w whereHelperint64) IN(slice []int64) qm.QueryMod {
+func (w whereHelperint) EQ(x int) qm.QueryMod  { return qmhelper.Where(w.field, qmhelper.EQ, x) }
+func (w whereHelperint) NEQ(x int) qm.QueryMod { return qmhelper.Where(w.field, qmhelper.NEQ, x) }
+func (w whereHelperint) LT(x int) qm.QueryMod  { return qmhelper.Where(w.field, qmhelper.LT, x) }
+func (w whereHelperint) LTE(x int) qm.QueryMod { return qmhelper.Where(w.field, qmhelper.LTE, x) }
+func (w whereHelperint) GT(x int) qm.QueryMod  { return qmhelper.Where(w.field, qmhelper.GT, x) }
+func (w whereHelperint) GTE(x int) qm.QueryMod { return qmhelper.Where(w.field, qmhelper.GTE, x) }
+func (w whereHelperint) IN(slice []int) qm.QueryMod {
 	values := make([]interface{}, 0, len(slice))
 	for _, value := range slice {
 		values = append(values, value)
 	}
 	return qm.WhereIn(fmt.Sprintf("%s IN ?", w.field), values...)
 }
-func (w whereHelperint64) NIN(slice []int64) qm.QueryMod {
+func (w whereHelperint) NIN(slice []int) qm.QueryMod {
 	values := make([]interface{}, 0, len(slice))
 	for _, value := range slice {
 		values = append(values, value)
@@ -144,46 +144,46 @@ func (w whereHelpernull_String) GTE(x null.String) qm.QueryMod {
 func (w whereHelpernull_String) IsNull() qm.QueryMod    { return qmhelper.WhereIsNull(w.field) }
 func (w whereHelpernull_String) IsNotNull() qm.QueryMod { return qmhelper.WhereIsNotNull(w.field) }
 
-type whereHelpernull_Int64 struct{ field string }
+type whereHelpernull_Int struct{ field string }
 
-func (w whereHelpernull_Int64) EQ(x null.Int64) qm.QueryMod {
+func (w whereHelpernull_Int) EQ(x null.Int) qm.QueryMod {
 	return qmhelper.WhereNullEQ(w.field, false, x)
 }
-func (w whereHelpernull_Int64) NEQ(x null.Int64) qm.QueryMod {
+func (w whereHelpernull_Int) NEQ(x null.Int) qm.QueryMod {
 	return qmhelper.WhereNullEQ(w.field, true, x)
 }
-func (w whereHelpernull_Int64) LT(x null.Int64) qm.QueryMod {
+func (w whereHelpernull_Int) LT(x null.Int) qm.QueryMod {
 	return qmhelper.Where(w.field, qmhelper.LT, x)
 }
-func (w whereHelpernull_Int64) LTE(x null.Int64) qm.QueryMod {
+func (w whereHelpernull_Int) LTE(x null.Int) qm.QueryMod {
 	return qmhelper.Where(w.field, qmhelper.LTE, x)
 }
-func (w whereHelpernull_Int64) GT(x null.Int64) qm.QueryMod {
+func (w whereHelpernull_Int) GT(x null.Int) qm.QueryMod {
 	return qmhelper.Where(w.field, qmhelper.GT, x)
 }
-func (w whereHelpernull_Int64) GTE(x null.Int64) qm.QueryMod {
+func (w whereHelpernull_Int) GTE(x null.Int) qm.QueryMod {
 	return qmhelper.Where(w.field, qmhelper.GTE, x)
 }
 
-func (w whereHelpernull_Int64) IsNull() qm.QueryMod    { return qmhelper.WhereIsNull(w.field) }
-func (w whereHelpernull_Int64) IsNotNull() qm.QueryMod { return qmhelper.WhereIsNotNull(w.field) }
+func (w whereHelpernull_Int) IsNull() qm.QueryMod    { return qmhelper.WhereIsNull(w.field) }
+func (w whereHelpernull_Int) IsNotNull() qm.QueryMod { return qmhelper.WhereIsNotNull(w.field) }
 
 var ComputerWhere = struct {
-	ID         whereHelperint64
+	ID         whereHelperint
 	Name       whereHelperstring
 	SSHUser    whereHelpernull_String
 	SSHKey     whereHelpernull_String
-	SSHPort    whereHelpernull_Int64
+	SSHPort    whereHelpernull_Int
 	IPAddress  whereHelperstring
 	MacAddress whereHelperstring
 }{
-	ID:         whereHelperint64{field: "\"computers\".\"id\""},
-	Name:       whereHelperstring{field: "\"computers\".\"name\""},
-	SSHUser:    whereHelpernull_String{field: "\"computers\".\"ssh_user\""},
-	SSHKey:     whereHelpernull_String{field: "\"computers\".\"ssh_key\""},
-	SSHPort:    whereHelpernull_Int64{field: "\"computers\".\"ssh_port\""},
-	IPAddress:  whereHelperstring{field: "\"computers\".\"ip_address\""},
-	MacAddress: whereHelperstring{field: "\"computers\".\"mac_address\""},
+	ID:         whereHelperint{field: "`computers`.`id`"},
+	Name:       whereHelperstring{field: "`computers`.`name`"},
+	SSHUser:    whereHelpernull_String{field: "`computers`.`ssh_user`"},
+	SSHKey:     whereHelpernull_String{field: "`computers`.`ssh_key`"},
+	SSHPort:    whereHelpernull_Int{field: "`computers`.`ssh_port`"},
+	IPAddress:  whereHelperstring{field: "`computers`.`ip_address`"},
+	MacAddress: whereHelperstring{field: "`computers`.`mac_address`"},
 }
 
 // ComputerRels is where relationship names are stored.
@@ -490,10 +490,10 @@ func (q computerQuery) Exists(ctx context.Context, exec boil.ContextExecutor) (b
 
 // Computers retrieves all the records using an executor.
 func Computers(mods ...qm.QueryMod) computerQuery {
-	mods = append(mods, qm.From("\"computers\""))
+	mods = append(mods, qm.From("`computers`"))
 	q := NewQuery(mods...)
 	if len(queries.GetSelect(q)) == 0 {
-		queries.SetSelect(q, []string{"\"computers\".*"})
+		queries.SetSelect(q, []string{"`computers`.*"})
 	}
 
 	return computerQuery{q}
@@ -501,7 +501,7 @@ func Computers(mods ...qm.QueryMod) computerQuery {
 
 // FindComputer retrieves a single record by ID with an executor.
 // If selectCols is empty Find will return all columns.
-func FindComputer(ctx context.Context, exec boil.ContextExecutor, iD int64, selectCols ...string) (*Computer, error) {
+func FindComputer(ctx context.Context, exec boil.ContextExecutor, iD int, selectCols ...string) (*Computer, error) {
 	computerObj := &Computer{}
 
 	sel := "*"
@@ -509,7 +509,7 @@ func FindComputer(ctx context.Context, exec boil.ContextExecutor, iD int64, sele
 		sel = strings.Join(strmangle.IdentQuoteSlice(dialect.LQ, dialect.RQ, selectCols), ",")
 	}
 	query := fmt.Sprintf(
-		"select %s from \"computers\" where \"id\"=?", sel,
+		"select %s from `computers` where `id`=?", sel,
 	)
 
 	q := queries.Raw(query, iD)
@@ -566,15 +566,15 @@ func (o *Computer) Insert(ctx context.Context, exec boil.ContextExecutor, column
 			return err
 		}
 		if len(wl) != 0 {
-			cache.query = fmt.Sprintf("INSERT INTO \"computers\" (\"%s\") %%sVALUES (%s)%%s", strings.Join(wl, "\",\""), strmangle.Placeholders(dialect.UseIndexPlaceholders, len(wl), 1, 1))
+			cache.query = fmt.Sprintf("INSERT INTO `computers` (`%s`) %%sVALUES (%s)%%s", strings.Join(wl, "`,`"), strmangle.Placeholders(dialect.UseIndexPlaceholders, len(wl), 1, 1))
 		} else {
-			cache.query = "INSERT INTO \"computers\" %sDEFAULT VALUES%s"
+			cache.query = "INSERT INTO `computers` () VALUES ()%s%s"
 		}
 
 		var queryOutput, queryReturning string
 
 		if len(cache.retMapping) != 0 {
-			queryReturning = fmt.Sprintf(" RETURNING \"%s\"", strings.Join(returnColumns, "\",\""))
+			cache.retQuery = fmt.Sprintf("SELECT `%s` FROM `computers` WHERE %s", strings.Join(returnColumns, "`,`"), strmangle.WhereClause("`", "`", 0, computerPrimaryKeyColumns))
 		}
 
 		cache.query = fmt.Sprintf(cache.query, queryOutput, queryReturning)
@@ -588,17 +588,44 @@ func (o *Computer) Insert(ctx context.Context, exec boil.ContextExecutor, column
 		fmt.Fprintln(writer, cache.query)
 		fmt.Fprintln(writer, vals)
 	}
-
-	if len(cache.retMapping) != 0 {
-		err = exec.QueryRowContext(ctx, cache.query, vals...).Scan(queries.PtrsFromMapping(value, cache.retMapping)...)
-	} else {
-		_, err = exec.ExecContext(ctx, cache.query, vals...)
-	}
+	result, err := exec.ExecContext(ctx, cache.query, vals...)
 
 	if err != nil {
 		return errors.Wrap(err, "models: unable to insert into computers")
 	}
 
+	var lastID int64
+	var identifierCols []interface{}
+
+	if len(cache.retMapping) == 0 {
+		goto CacheNoHooks
+	}
+
+	lastID, err = result.LastInsertId()
+	if err != nil {
+		return ErrSyncFail
+	}
+
+	o.ID = int(lastID)
+	if lastID != 0 && len(cache.retMapping) == 1 && cache.retMapping[0] == computerMapping["id"] {
+		goto CacheNoHooks
+	}
+
+	identifierCols = []interface{}{
+		o.ID,
+	}
+
+	if boil.IsDebug(ctx) {
+		writer := boil.DebugWriterFrom(ctx)
+		fmt.Fprintln(writer, cache.retQuery)
+		fmt.Fprintln(writer, identifierCols...)
+	}
+	err = exec.QueryRowContext(ctx, cache.retQuery, identifierCols...).Scan(queries.PtrsFromMapping(value, cache.retMapping)...)
+	if err != nil {
+		return errors.Wrap(err, "models: unable to populate default values for computers")
+	}
+
+CacheNoHooks:
 	if !cached {
 		computerInsertCacheMut.Lock()
 		computerInsertCache[key] = cache
@@ -634,9 +661,9 @@ func (o *Computer) Update(ctx context.Context, exec boil.ContextExecutor, column
 			return 0, errors.New("models: unable to update computers, could not build whitelist")
 		}
 
-		cache.query = fmt.Sprintf("UPDATE \"computers\" SET %s WHERE %s",
-			strmangle.SetParamNames("\"", "\"", 0, wl),
-			strmangle.WhereClause("\"", "\"", 0, computerPrimaryKeyColumns),
+		cache.query = fmt.Sprintf("UPDATE `computers` SET %s WHERE %s",
+			strmangle.SetParamNames("`", "`", 0, wl),
+			strmangle.WhereClause("`", "`", 0, computerPrimaryKeyColumns),
 		)
 		cache.valueMapping, err = queries.BindMapping(computerType, computerMapping, append(wl, computerPrimaryKeyColumns...))
 		if err != nil {
@@ -715,8 +742,8 @@ func (o ComputerSlice) UpdateAll(ctx context.Context, exec boil.ContextExecutor,
 		args = append(args, pkeyArgs...)
 	}
 
-	sql := fmt.Sprintf("UPDATE \"computers\" SET %s WHERE %s",
-		strmangle.SetParamNames("\"", "\"", 0, colNames),
+	sql := fmt.Sprintf("UPDATE `computers` SET %s WHERE %s",
+		strmangle.SetParamNames("`", "`", 0, colNames),
 		strmangle.WhereClauseRepeated(string(dialect.LQ), string(dialect.RQ), 0, computerPrimaryKeyColumns, len(o)))
 
 	if boil.IsDebug(ctx) {
@@ -736,6 +763,157 @@ func (o ComputerSlice) UpdateAll(ctx context.Context, exec boil.ContextExecutor,
 	return rowsAff, nil
 }
 
+var mySQLComputerUniqueColumns = []string{
+	"id",
+	"ip_address",
+	"mac_address",
+}
+
+// Upsert attempts an insert using an executor, and does an update or ignore on conflict.
+// See boil.Columns documentation for how to properly use updateColumns and insertColumns.
+func (o *Computer) Upsert(ctx context.Context, exec boil.ContextExecutor, updateColumns, insertColumns boil.Columns) error {
+	if o == nil {
+		return errors.New("models: no computers provided for upsert")
+	}
+
+	if err := o.doBeforeUpsertHooks(ctx, exec); err != nil {
+		return err
+	}
+
+	nzDefaults := queries.NonZeroDefaultSet(computerColumnsWithDefault, o)
+	nzUniques := queries.NonZeroDefaultSet(mySQLComputerUniqueColumns, o)
+
+	if len(nzUniques) == 0 {
+		return errors.New("cannot upsert with a table that cannot conflict on a unique column")
+	}
+
+	// Build cache key in-line uglily - mysql vs psql problems
+	buf := strmangle.GetBuffer()
+	buf.WriteString(strconv.Itoa(updateColumns.Kind))
+	for _, c := range updateColumns.Cols {
+		buf.WriteString(c)
+	}
+	buf.WriteByte('.')
+	buf.WriteString(strconv.Itoa(insertColumns.Kind))
+	for _, c := range insertColumns.Cols {
+		buf.WriteString(c)
+	}
+	buf.WriteByte('.')
+	for _, c := range nzDefaults {
+		buf.WriteString(c)
+	}
+	buf.WriteByte('.')
+	for _, c := range nzUniques {
+		buf.WriteString(c)
+	}
+	key := buf.String()
+	strmangle.PutBuffer(buf)
+
+	computerUpsertCacheMut.RLock()
+	cache, cached := computerUpsertCache[key]
+	computerUpsertCacheMut.RUnlock()
+
+	var err error
+
+	if !cached {
+		insert, ret := insertColumns.InsertColumnSet(
+			computerAllColumns,
+			computerColumnsWithDefault,
+			computerColumnsWithoutDefault,
+			nzDefaults,
+		)
+
+		update := updateColumns.UpdateColumnSet(
+			computerAllColumns,
+			computerPrimaryKeyColumns,
+		)
+
+		if !updateColumns.IsNone() && len(update) == 0 {
+			return errors.New("models: unable to upsert computers, could not build update column list")
+		}
+
+		ret = strmangle.SetComplement(ret, nzUniques)
+		cache.query = buildUpsertQueryMySQL(dialect, "`computers`", update, insert)
+		cache.retQuery = fmt.Sprintf(
+			"SELECT %s FROM `computers` WHERE %s",
+			strings.Join(strmangle.IdentQuoteSlice(dialect.LQ, dialect.RQ, ret), ","),
+			strmangle.WhereClause("`", "`", 0, nzUniques),
+		)
+
+		cache.valueMapping, err = queries.BindMapping(computerType, computerMapping, insert)
+		if err != nil {
+			return err
+		}
+		if len(ret) != 0 {
+			cache.retMapping, err = queries.BindMapping(computerType, computerMapping, ret)
+			if err != nil {
+				return err
+			}
+		}
+	}
+
+	value := reflect.Indirect(reflect.ValueOf(o))
+	vals := queries.ValuesFromMapping(value, cache.valueMapping)
+	var returns []interface{}
+	if len(cache.retMapping) != 0 {
+		returns = queries.PtrsFromMapping(value, cache.retMapping)
+	}
+
+	if boil.IsDebug(ctx) {
+		writer := boil.DebugWriterFrom(ctx)
+		fmt.Fprintln(writer, cache.query)
+		fmt.Fprintln(writer, vals)
+	}
+	result, err := exec.ExecContext(ctx, cache.query, vals...)
+
+	if err != nil {
+		return errors.Wrap(err, "models: unable to upsert for computers")
+	}
+
+	var lastID int64
+	var uniqueMap []uint64
+	var nzUniqueCols []interface{}
+
+	if len(cache.retMapping) == 0 {
+		goto CacheNoHooks
+	}
+
+	lastID, err = result.LastInsertId()
+	if err != nil {
+		return ErrSyncFail
+	}
+
+	o.ID = int(lastID)
+	if lastID != 0 && len(cache.retMapping) == 1 && cache.retMapping[0] == computerMapping["id"] {
+		goto CacheNoHooks
+	}
+
+	uniqueMap, err = queries.BindMapping(computerType, computerMapping, nzUniques)
+	if err != nil {
+		return errors.Wrap(err, "models: unable to retrieve unique values for computers")
+	}
+	nzUniqueCols = queries.ValuesFromMapping(reflect.Indirect(reflect.ValueOf(o)), uniqueMap)
+
+	if boil.IsDebug(ctx) {
+		writer := boil.DebugWriterFrom(ctx)
+		fmt.Fprintln(writer, cache.retQuery)
+		fmt.Fprintln(writer, nzUniqueCols...)
+	}
+	err = exec.QueryRowContext(ctx, cache.retQuery, nzUniqueCols...).Scan(returns...)
+	if err != nil {
+		return errors.Wrap(err, "models: unable to populate default values for computers")
+	}
+
+CacheNoHooks:
+	if !cached {
+		computerUpsertCacheMut.Lock()
+		computerUpsertCache[key] = cache
+		computerUpsertCacheMut.Unlock()
+	}
+
+	return o.doAfterUpsertHooks(ctx, exec)
+}
+
 // Delete deletes a single Computer record with an executor.
 // Delete will match against the primary key column to find the record to delete.
 func (o *Computer) Delete(ctx context.Context, exec boil.ContextExecutor) (int64, error) {
@@ -748,7 +926,7 @@ func (o *Computer) Delete(ctx context.Context, exec boil.ContextExecutor) (int64
 	}
 
 	args := queries.ValuesFromMapping(reflect.Indirect(reflect.ValueOf(o)), computerPrimaryKeyMapping)
-	sql := "DELETE FROM \"computers\" WHERE \"id\"=?"
+	sql := "DELETE FROM `computers` WHERE `id`=?"
 
 	if boil.IsDebug(ctx) {
 		writer := boil.DebugWriterFrom(ctx)
@@ -813,7 +991,7 @@ func (o ComputerSlice) DeleteAll(ctx context.Context, exec boil.ContextExecutor)
 		args = append(args, pkeyArgs...)
 	}
 
-	sql := "DELETE FROM \"computers\" WHERE " +
+	sql := "DELETE FROM `computers` WHERE " +
 		strmangle.WhereClauseRepeated(string(dialect.LQ), string(dialect.RQ), 0, computerPrimaryKeyColumns, len(o))
 
 	if boil.IsDebug(ctx) {
@@ -868,7 +1046,7 @@ func (o *ComputerSlice) ReloadAll(ctx context.Context, exec boil.ContextExecutor
 		args = append(args, pkeyArgs...)
 	}
 
-	sql := "SELECT \"computers\".* FROM \"computers\" WHERE " +
+	sql := "SELECT `computers`.* FROM `computers` WHERE " +
 		strmangle.WhereClauseRepeated(string(dialect.LQ), string(dialect.RQ), 0, computerPrimaryKeyColumns, len(*o))
 
 	q := queries.Raw(sql, args...)
@@ -884,9 +1062,9 @@ func (o *ComputerSlice) ReloadAll(ctx context.Context, exec boil.ContextExecutor
 }
 
 // ComputerExists checks if the Computer row exists.
-func ComputerExists(ctx context.Context, exec boil.ContextExecutor, iD int64) (bool, error) {
+func ComputerExists(ctx context.Context, exec boil.ContextExecutor, iD int) (bool, error) {
 	var exists bool
-	sql := "select exists(select 1 from \"computers\" where \"id\"=? limit 1)"
+	sql := "select exists(select 1 from `computers` where `id`=? limit 1)"
 
 	if boil.IsDebug(ctx) {
 		writer := boil.DebugWriterFrom(ctx)
@@ -901,119 +1079,4 @@ func ComputerExists(ctx context.Context, exec boil.ContextExecutor, iD int64) (b
 	}
 
 	return exists, nil
-}
-
-// Upsert attempts an insert using an executor, and does an update or ignore on conflict.
-// See boil.Columns documentation for how to properly use updateColumns and insertColumns.
-func (o *Computer) Upsert(ctx context.Context, exec boil.ContextExecutor, updateOnConflict bool, conflictColumns []string, updateColumns, insertColumns boil.Columns) error {
-	if o == nil {
-		return errors.New("models: no computers provided for upsert")
-	}
-
-	if err := o.doBeforeUpsertHooks(ctx, exec); err != nil {
-		return err
-	}
-
-	nzDefaults := queries.NonZeroDefaultSet(computerColumnsWithDefault, o)
-
-	// Build cache key in-line uglily - mysql vs psql problems
-	buf := strmangle.GetBuffer()
-	if updateOnConflict {
-		buf.WriteByte('t')
-	} else {
-		buf.WriteByte('f')
-	}
-	buf.WriteByte('.')
-	for _, c := range conflictColumns {
-		buf.WriteString(c)
-	}
-	buf.WriteByte('.')
-	buf.WriteString(strconv.Itoa(updateColumns.Kind))
-	for _, c := range updateColumns.Cols {
-		buf.WriteString(c)
-	}
-	buf.WriteByte('.')
-	buf.WriteString(strconv.Itoa(insertColumns.Kind))
-	for _, c := range insertColumns.Cols {
-		buf.WriteString(c)
-	}
-	buf.WriteByte('.')
-	for _, c := range nzDefaults {
-		buf.WriteString(c)
-	}
-	key := buf.String()
-	strmangle.PutBuffer(buf)
-
-	computerUpsertCacheMut.RLock()
-	cache, cached := computerUpsertCache[key]
-	computerUpsertCacheMut.RUnlock()
-
-	var err error
-
-	if !cached {
-		insert, ret := insertColumns.InsertColumnSet(
-			computerAllColumns,
-			computerColumnsWithDefault,
-			computerColumnsWithoutDefault,
-			nzDefaults,
-		)
-		update := updateColumns.UpdateColumnSet(
-			computerAllColumns,
-			computerPrimaryKeyColumns,
-		)
-
-		if updateOnConflict && len(update) == 0 {
-			return errors.New("models: unable to upsert computers, could not build update column list")
-		}
-
-		conflict := conflictColumns
-		if len(conflict) == 0 {
-			conflict = make([]string, len(computerPrimaryKeyColumns))
-			copy(conflict, computerPrimaryKeyColumns)
-		}
-		cache.query = buildUpsertQuerySQLite(dialect, "\"computers\"", updateOnConflict, ret, update, conflict, insert)
-
-		cache.valueMapping, err = queries.BindMapping(computerType, computerMapping, insert)
-		if err != nil {
-			return err
-		}
-		if len(ret) != 0 {
-			cache.retMapping, err = queries.BindMapping(computerType, computerMapping, ret)
-			if err != nil {
-				return err
-			}
-		}
-	}
-
-	value := reflect.Indirect(reflect.ValueOf(o))
-	vals := queries.ValuesFromMapping(value, cache.valueMapping)
-	var returns []interface{}
-	if len(cache.retMapping) != 0 {
-		returns = queries.PtrsFromMapping(value, cache.retMapping)
-	}
-
-	if boil.IsDebug(ctx) {
-		writer := boil.DebugWriterFrom(ctx)
-		fmt.Fprintln(writer, cache.query)
-		fmt.Fprintln(writer, vals)
-	}
-	if len(cache.retMapping) != 0 {
-		err = exec.QueryRowContext(ctx, cache.query, vals...).Scan(returns...)
-		if err == sql.ErrNoRows {
-			err = nil // Postgres doesn't return anything when there's no update
-		}
-	} else {
-		_, err = exec.ExecContext(ctx, cache.query, vals...)
-	}
-	if err != nil {
-		return errors.Wrap(err, "models: unable to upsert computers")
-	}
-
-	if !cached {
-		computerUpsertCacheMut.Lock()
-		computerUpsertCache[key] = cache
-		computerUpsertCacheMut.Unlock()
-	}
-
-	return o.doAfterUpsertHooks(ctx, exec)
 }

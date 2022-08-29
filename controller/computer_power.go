@@ -169,7 +169,7 @@ func powerOff(c echo.Context, computer *models.Computer) error {
 
 	sshAddr := computer.IPAddress + ":"
 	if computer.SSHPort.Valid {
-		sshAddr += strconv.FormatInt(computer.SSHPort.Int64, 10)
+		sshAddr += strconv.Itoa(computer.SSHPort.Int)
 	} else {
 		sshAddr += "22"
 	}

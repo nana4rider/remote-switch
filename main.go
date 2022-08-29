@@ -3,7 +3,7 @@ package main
 import (
 	"database/sql"
 
-	_ "github.com/mattn/go-sqlite3"
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/nana4rider/remote-switch/config"
 	"github.com/nana4rider/remote-switch/server"
 	"github.com/volatiletech/sqlboiler/v4/boil"

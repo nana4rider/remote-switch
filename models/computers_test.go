@@ -15,53 +15,6 @@ import (
 	"github.com/volatiletech/strmangle"
 )
 
-func testComputersUpsert(t *testing.T) {
-	t.Parallel()
-	if len(computerAllColumns) == len(computerPrimaryKeyColumns) {
-		t.Skip("Skipping table with only primary key columns")
-	}
-
-	seed := randomize.NewSeed()
-	var err error
-	// Attempt the INSERT side of an UPSERT
-	o := Computer{}
-	if err = randomize.Struct(seed, &o, computerDBTypes, true); err != nil {
-		t.Errorf("Unable to randomize Computer struct: %s", err)
-	}
-
-	ctx := context.Background()
-	tx := MustTx(boil.BeginTx(ctx, nil))
-	defer func() { _ = tx.Rollback() }()
-	if err = o.Upsert(ctx, tx, false, nil, boil.Infer(), boil.Infer()); err != nil {
-		t.Errorf("Unable to upsert Computer: %s", err)
-	}
-
-	count, err := Computers().Count(ctx, tx)
-	if err != nil {
-		t.Error(err)
-	}
-	if count != 1 {
-		t.Error("want one record, got:", count)
-	}
-
-	// Attempt the UPDATE side of an UPSERT
-	if err = randomize.Struct(seed, &o, computerDBTypes, false, computerPrimaryKeyColumns...); err != nil {
-		t.Errorf("Unable to randomize Computer struct: %s", err)
-	}
-
-	if err = o.Upsert(ctx, tx, true, nil, boil.Infer(), boil.Infer()); err != nil {
-		t.Errorf("Unable to upsert Computer: %s", err)
-	}
-
-	count, err = Computers().Count(ctx, tx)
-	if err != nil {
-		t.Error(err)
-	}
-	if count != 1 {
-		t.Error("want one record, got:", count)
-	}
-}
-
 var (
 	// Relationships sometimes use the reflection helper queries.Equal/queries.Assign
 	// so force a package dependency in case they don't.
@@ -615,7 +568,7 @@ func testComputersSelect(t *testing.T) {
 }
 
 var (
-	computerDBTypes = map[string]string{`ID`: `INTEGER`, `Name`: `TEXT`, `SSHUser`: `TEXT`, `SSHKey`: `TEXT`, `SSHPort`: `INTEGER`, `IPAddress`: `TEXT`, `MacAddress`: `TEXT`}
+	computerDBTypes = map[string]string{`ID`: `int`, `Name`: `text`, `SSHUser`: `text`, `SSHKey`: `text`, `SSHPort`: `int`, `IPAddress`: `text`, `MacAddress`: `text`}
 	_               = bytes.MinRead
 )
 
@@ -727,5 +680,56 @@ func testComputersSliceUpdateAll(t *testing.T) {
 		t.Error(err)
 	} else if rowsAff != 1 {
 		t.Error("wanted one record updated but got", rowsAff)
+	}
+}
+
+func testComputersUpsert(t *testing.T) {
+	t.Parallel()
+
+	if len(computerAllColumns) == len(computerPrimaryKeyColumns) {
+		t.Skip("Skipping table with only primary key columns")
+	}
+	if len(mySQLComputerUniqueColumns) == 0 {
+		t.Skip("Skipping table with no unique columns to conflict on")
+	}
+
+	seed := randomize.NewSeed()
+	var err error
+	// Attempt the INSERT side of an UPSERT
+	o := Computer{}
+	if err = randomize.Struct(seed, &o, computerDBTypes, false); err != nil {
+		t.Errorf("Unable to randomize Computer struct: %s", err)
+	}
+
+	ctx := context.Background()
+	tx := MustTx(boil.BeginTx(ctx, nil))
+	defer func() { _ = tx.Rollback() }()
+	if err = o.Upsert(ctx, tx, boil.Infer(), boil.Infer()); err != nil {
+		t.Errorf("Unable to upsert Computer: %s", err)
+	}
+
+	count, err := Computers().Count(ctx, tx)
+	if err != nil {
+		t.Error(err)
+	}
+	if count != 1 {
+		t.Error("want one record, got:", count)
+	}
+
+	// Attempt the UPDATE side of an UPSERT
+	if err = randomize.Struct(seed, &o, computerDBTypes, false, computerPrimaryKeyColumns...); err != nil {
+		t.Errorf("Unable to randomize Computer struct: %s", err)
+	}
+
+	if err = o.Upsert(ctx, tx, boil.Infer(), boil.Infer()); err != nil {
+		t.Errorf("Unable to upsert Computer: %s", err)
+	}
+
+	count, err = Computers().Count(ctx, tx)
+	if err != nil {
+		t.Error(err)
+	}
+	if count != 1 {
+		t.Error("want one record, got:", count)
 	}
 }

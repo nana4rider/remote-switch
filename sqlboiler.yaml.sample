@@ -1,0 +1,7 @@
+# sqlboiler mysql
+mysql:
+  host: "host"
+  dbname: "dbname"
+  port: 3306
+  user: "user"
+  pass: "pass"

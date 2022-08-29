@@ -21,7 +21,7 @@ var (
 )
 
 func FindComputerById(c echo.Context) (*models.Computer, error) {
-	computerID, err := strconv.ParseInt(c.Param("id"), 10, 64)
+	computerID, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		c.Logger().Error(err)
 		return nil, err

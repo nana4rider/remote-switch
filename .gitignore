@@ -1,5 +1,5 @@
 remote-switch
 remote-switch.exe
 __debug_bin.exe
-database/sqlite3.db
 config/config.yml
+sqlboiler.yaml
