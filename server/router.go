@@ -12,15 +12,17 @@ func NewRouter() (*echo.Echo, error) {
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 
-	e.GET("/computers", controller.FindAllComputers)
+	r := e.Group("/v1")
 
-	e.GET("/computers/:id", controller.FindComputer)
-	e.POST("/computers", controller.CreateComputer)
-	e.PUT("/computers/:id", controller.UpdateComputer)
-	e.DELETE("/computers/:id", controller.DeleteComputer)
+	r.GET("/computers", controller.FindAllComputers)
 
-	e.GET("/computers/:id/power", controller.GetPower)
-	e.PUT("/computers/:id/power", controller.UpdatePower)
+	r.GET("/computers/:id", controller.FindComputer)
+	r.POST("/computers", controller.CreateComputer)
+	r.PUT("/computers/:id", controller.UpdateComputer)
+	r.DELETE("/computers/:id", controller.DeleteComputer)
+
+	r.GET("/computers/:id/power", controller.GetPower)
+	r.PUT("/computers/:id/power", controller.UpdatePower)
 
 	return e, nil
 }

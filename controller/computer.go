@@ -30,6 +30,12 @@ func FindComputerById(c echo.Context) (*models.Computer, error) {
 	return models.FindComputer(context.Background(), boil.GetContextDB(), computerID)
 }
 
+// @Summary コンピュータの一覧を取得
+// @Tags computer
+// @Produce json
+// @Success 200 {array} models.Computer
+// @Failure 404 {object} ResError
+// @Router /computers [get]
 func FindAllComputers(c echo.Context) error {
 	computers, err := models.Computers().All(context.Background(), boil.GetContextDB())
 	if err != nil {
@@ -40,6 +46,13 @@ func FindAllComputers(c echo.Context) error {
 	return c.JSON(http.StatusOK, computers)
 }
 
+// @Summary コンピュータの詳細を取得
+// @Tags computer
+// @Produce json
+// @Param id path int true "Computer ID"
+// @Success 200 {object} models.Computer
+// @Failure 404 {object} ResError
+// @Router /computers/{id} [get]
 func FindComputer(c echo.Context) error {
 	computer, err := FindComputerById(c)
 	if err != nil {
@@ -50,6 +63,13 @@ func FindComputer(c echo.Context) error {
 	return c.JSON(http.StatusOK, computer)
 }
 
+// @Summary コンピュータを登録
+// @Tags computer
+// @Accept json
+// @Param request body models.Computer true "ssh_key: default $HOME/.ssh/id_rsa, ssh_port: default 22, mac_address: default 'arp -a ip_address'"
+// @Success 201
+// @Failure 400 {object} ResValidationError
+// @Router /computers [post]
 func CreateComputer(c echo.Context) error {
 	computer := new(models.Computer)
 	if err := c.Bind(computer); err != nil {
@@ -68,7 +88,7 @@ func CreateComputer(c echo.Context) error {
 
 	if err := computer.Insert(context.Background(), boil.GetContextDB(), boil.Infer()); err != nil {
 		c.Logger().Error(err)
-		return c.JSON(http.StatusBadRequest, ResError{err.Error()})
+		return c.JSON(http.StatusInternalServerError, ResError{err.Error()})
 	}
 
 	if err := computer.Reload(context.Background(), boil.GetContextDB()); err != nil {
@@ -79,6 +99,14 @@ func CreateComputer(c echo.Context) error {
 	return c.JSON(http.StatusCreated, computer)
 }
 
+// @Summary コンピュータを更新
+// @Tags computer
+// @Accept json
+// @Param id path int true "Computer ID"
+// @Param request body models.Computer true "ssh_key: default $HOME/.ssh/id_rsa, ssh_port: default 22, mac_address: default 'arp -a ip_address'"
+// @Success 204
+// @Failure 400 {object} ResValidationError
+// @Router /computers/{id} [put]
 func UpdateComputer(c echo.Context) error {
 	computer, err := FindComputerById(c)
 	if err != nil {
@@ -104,12 +132,18 @@ func UpdateComputer(c echo.Context) error {
 
 	if _, err := computer.Update(context.Background(), boil.GetContextDB(), boil.Infer()); err != nil {
 		c.Logger().Error(err)
-		return c.JSON(http.StatusBadRequest, ResError{err.Error()})
+		return c.JSON(http.StatusInternalServerError, ResError{err.Error()})
 	}
 
 	return c.String(http.StatusNoContent, "")
 }
 
+// @Summary コンピュータを削除
+// @Tags computer
+// @Param id path int true "Computer ID"
+// @Success 204
+// @Failure 404 {object} ResError
+// @Router /computers/{id} [delete]
 func DeleteComputer(c echo.Context) error {
 	computer, err := FindComputerById(c)
 	if err != nil {

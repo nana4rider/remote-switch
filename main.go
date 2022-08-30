@@ -9,6 +9,13 @@ import (
 	"github.com/volatiletech/sqlboiler/v4/boil"
 )
 
+// @title Remote Switch API
+// @version 1.0
+// @description PCの電源をON/OFFするためのAPIです
+// @license.name ISC
+// @license.url https://licenses.opensource.jp/ISC/ISC.html
+// @host localhost:8080
+// @BasePath /v1
 func main() {
 	if err := config.Load(); err != nil {
 		panic(err)

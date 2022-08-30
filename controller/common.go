@@ -4,7 +4,7 @@ type ResError struct {
 	Message string `json:"message"`
 }
 
-type ResBoolError struct {
+type ResBool struct {
 	Message string `json:"message"`
 	Result  bool   `json:"result"`
 }

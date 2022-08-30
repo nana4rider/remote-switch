@@ -26,10 +26,21 @@ const (
 	COMMAND_POWEROFF_MAC     = "sudo pmset sleepnow"
 )
 
-type PowerState struct {
-	State string `json:"state"`
+type GetPowerState struct {
+	State string `json:"state" enums:"ON,OFF"`
 }
 
+type SetPowerState struct {
+	State string `json:"state" enums:"ON,OFF,TOGGLE"`
+}
+
+// @Summary コンピュータの電源状態を取得
+// @Tags power
+// @Produce json
+// @Param id path int true "Computer ID"
+// @Success 200 {object} GetPowerState
+// @Failure 404 {object} ResError
+// @Router /computers/{id}/power [get]
 func GetPower(c echo.Context) error {
 	computer, err := FindComputerById(c)
 	if err != nil {
@@ -42,7 +53,7 @@ func GetPower(c echo.Context) error {
 		return err
 	}
 
-	s := new(PowerState)
+	s := new(GetPowerState)
 	s.State = state
 
 	return c.JSON(http.StatusOK, s)
@@ -69,8 +80,18 @@ func getPowerState(c echo.Context, computer *models.Computer) (string, error) {
 	}
 }
 
+// @Summary コンピュータの電源状態を変更
+// @Tags power
+// @Accept json
+// @Produce json
+// @Param id path int true "Computer ID"
+// @Param request body SetPowerState true "変更したい電源状態"
+// @Success 200 {object} ResBool
+// @Failure 400 {object} ResError
+// @Failure 404 {object} ResError
+// @Router /computers/{id}/power [put]
 func UpdatePower(c echo.Context) error {
-	s := new(PowerState)
+	s := new(SetPowerState)
 	if err := c.Bind(s); err == nil {
 		computer, err := FindComputerById(c)
 		if err != nil {
@@ -120,7 +141,7 @@ func powerOn(c echo.Context, computer *models.Computer) error {
 		return c.JSON(http.StatusInternalServerError, ResError{"Failed to send magic packet"})
 	}
 
-	return c.JSON(http.StatusOK, ResBoolError{"", true})
+	return c.JSON(http.StatusOK, ResBool{"", true})
 }
 
 func powerOff(c echo.Context, computer *models.Computer) error {
@@ -177,7 +198,7 @@ func powerOff(c echo.Context, computer *models.Computer) error {
 	client, err := ssh.Dial("tcp", sshAddr, sconf)
 	if err != nil {
 		// already off
-		return c.JSON(http.StatusOK, ResBoolError{err.Error(), false})
+		return c.JSON(http.StatusOK, ResBool{err.Error(), false})
 	}
 	defer client.Close()
 
@@ -211,5 +232,5 @@ func powerOff(c echo.Context, computer *models.Computer) error {
 		return c.JSON(http.StatusInternalServerError, ResError{err.Error()})
 	}
 
-	return c.JSON(http.StatusOK, ResBoolError{"", true})
+	return c.JSON(http.StatusOK, ResBool{"", true})
 }

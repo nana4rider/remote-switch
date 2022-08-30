@@ -26,9 +26,9 @@ import (
 type Computer struct {
 	ID         int         `boil:"id" json:"id" toml:"id" yaml:"id"`
 	Name       string      `boil:"name" json:"name" toml:"name" yaml:"name"`
-	SSHUser    null.String `boil:"ssh_user" json:"ssh_user,omitempty" toml:"ssh_user" yaml:"ssh_user,omitempty"`
-	SSHKey     null.String `boil:"ssh_key" json:"ssh_key,omitempty" toml:"ssh_key" yaml:"ssh_key,omitempty"`
-	SSHPort    null.Int    `boil:"ssh_port" json:"ssh_port,omitempty" toml:"ssh_port" yaml:"ssh_port,omitempty"`
+	SSHUser    null.String `boil:"ssh_user" json:"ssh_user,omitempty" toml:"ssh_user" yaml:"ssh_user,omitempty" swaggertype:"string"`
+	SSHKey     null.String `boil:"ssh_key" json:"ssh_key,omitempty" toml:"ssh_key" yaml:"ssh_key,omitempty" swaggertype:"string"`
+	SSHPort    null.Int    `boil:"ssh_port" json:"ssh_port,omitempty" toml:"ssh_port" yaml:"ssh_port,omitempty" swaggertype:"number"`
 	IPAddress  string      `boil:"ip_address" json:"ip_address" toml:"ip_address" yaml:"ip_address"`
 	MacAddress string      `boil:"mac_address" json:"mac_address" toml:"mac_address" yaml:"mac_address"`
 
