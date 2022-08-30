@@ -1,6 +1,6 @@
 # remote-switch
 
-PC Remote Switch
+PC Remote Switch API
 
 ## 概要
 

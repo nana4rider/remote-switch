@@ -9,7 +9,7 @@ import (
 	"github.com/volatiletech/sqlboiler/v4/boil"
 )
 
-// @title Remote Switch API
+// @title PC Remote Switch API
 // @version 1.0
 // @description PCの電源をON/OFFするためのAPIです
 // @license.name ISC
