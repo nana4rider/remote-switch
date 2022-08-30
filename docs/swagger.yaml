@@ -69,7 +69,7 @@ info:
   license:
     name: ISC
     url: https://licenses.opensource.jp/ISC/ISC.html
-  title: Remote Switch API
+  title: PC Remote Switch API
   version: "1.0"
 paths:
   /computers:
