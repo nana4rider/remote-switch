@@ -21,7 +21,7 @@ var (
 )
 
 func FindComputerById(c echo.Context) (*models.Computer, error) {
-	computerID, err := strconv.Atoi(c.Param("id"))
+	computerID, err := strconv.Atoi(c.Param("computerId"))
 	if err != nil {
 		c.Logger().Error(err)
 		return nil, err
@@ -49,10 +49,10 @@ func FindAllComputers(c echo.Context) error {
 // @Summary コンピュータの詳細を取得
 // @Tags computer
 // @Produce json
-// @Param id path int true "Computer ID"
+// @Param computerId path int true "Computer ID"
 // @Success 200 {object} models.Computer
 // @Failure 404 {object} ResError
-// @Router /computers/{id} [get]
+// @Router /computers/{computerId} [get]
 func FindComputer(c echo.Context) error {
 	computer, err := FindComputerById(c)
 	if err != nil {
@@ -102,11 +102,11 @@ func CreateComputer(c echo.Context) error {
 // @Summary コンピュータを更新
 // @Tags computer
 // @Accept json
-// @Param id path int true "Computer ID"
+// @Param computerId path int true "Computer ID"
 // @Param request body models.Computer true "ssh_key: default $HOME/.ssh/id_rsa, ssh_port: default 22, mac_address: default 'arp -a ip_address'"
 // @Success 204
 // @Failure 400 {object} ResValidationError
-// @Router /computers/{id} [put]
+// @Router /computers/{computerId} [put]
 func UpdateComputer(c echo.Context) error {
 	computer, err := FindComputerById(c)
 	if err != nil {
@@ -114,11 +114,11 @@ func UpdateComputer(c echo.Context) error {
 		return c.JSON(code, ResError{http.StatusText(code)})
 	}
 
-	id := computer.ID
+	id := computer.ComputerID
 	if err := c.Bind(computer); err != nil {
 		return err
 	}
-	computer.ID = id
+	computer.ComputerID = id
 
 	if len(computer.MacAddress) == 0 && len(computer.IPAddress) != 0 {
 		if mac, err := getMacAddr(computer.IPAddress); err == nil {
@@ -140,10 +140,10 @@ func UpdateComputer(c echo.Context) error {
 
 // @Summary コンピュータを削除
 // @Tags computer
-// @Param id path int true "Computer ID"
+// @Param computerId path int true "Computer ID"
 // @Success 204
 // @Failure 404 {object} ResError
-// @Router /computers/{id} [delete]
+// @Router /computers/{computerId} [delete]
 func DeleteComputer(c echo.Context) error {
 	computer, err := FindComputerById(c)
 	if err != nil {

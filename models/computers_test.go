@@ -149,7 +149,7 @@ func testComputersExists(t *testing.T) {
 		t.Error(err)
 	}
 
-	e, err := ComputerExists(ctx, tx, o.ID)
+	e, err := ComputerExists(ctx, tx, o.ComputerID)
 	if err != nil {
 		t.Errorf("Unable to check if Computer exists: %s", err)
 	}
@@ -175,7 +175,7 @@ func testComputersFind(t *testing.T) {
 		t.Error(err)
 	}
 
-	computerFound, err := FindComputer(ctx, tx, o.ID)
+	computerFound, err := FindComputer(ctx, tx, o.ComputerID)
 	if err != nil {
 		t.Error(err)
 	}
@@ -568,7 +568,7 @@ func testComputersSelect(t *testing.T) {
 }
 
 var (
-	computerDBTypes = map[string]string{`ID`: `int`, `Name`: `text`, `SSHUser`: `text`, `SSHKey`: `text`, `SSHPort`: `int`, `IPAddress`: `text`, `MacAddress`: `text`}
+	computerDBTypes = map[string]string{`ComputerID`: `int`, `Name`: `text`, `SSHUser`: `text`, `SSHKey`: `text`, `SSHPort`: `int`, `IPAddress`: `text`, `MacAddress`: `text`}
 	_               = bytes.MinRead
 )
 

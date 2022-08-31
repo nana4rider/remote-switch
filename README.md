@@ -14,4 +14,4 @@ PCの電源をON/OFFするためのAPIです。
 https://nana4rider.github.io/remote-switch/
 
 ## APIドキュメント更新
-`swag i -ot yaml -o .`
+`swag i -ot yaml`

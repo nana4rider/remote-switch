@@ -47,7 +47,7 @@ definitions:
     type: object
   models.Computer:
     properties:
-      id:
+      computer_id:
         type: integer
       ip_address:
         type: string
@@ -111,12 +111,12 @@ paths:
       summary: コンピュータを登録
       tags:
       - computer
-  /computers/{id}:
+  /computers/{computerId}:
     delete:
       parameters:
       - description: Computer ID
         in: path
-        name: id
+        name: computerId
         required: true
         type: integer
       responses:
@@ -133,7 +133,7 @@ paths:
       parameters:
       - description: Computer ID
         in: path
-        name: id
+        name: computerId
         required: true
         type: integer
       produces:
@@ -156,7 +156,7 @@ paths:
       parameters:
       - description: Computer ID
         in: path
-        name: id
+        name: computerId
         required: true
         type: integer
       - description: 'ssh_key: default $HOME/.ssh/id_rsa, ssh_port: default 22, mac_address:
@@ -176,12 +176,12 @@ paths:
       summary: コンピュータを更新
       tags:
       - computer
-  /computers/{id}/power:
+  /computers/{computerId}/power:
     get:
       parameters:
       - description: Computer ID
         in: path
-        name: id
+        name: computerId
         required: true
         type: integer
       produces:
@@ -204,7 +204,7 @@ paths:
       parameters:
       - description: Computer ID
         in: path
-        name: id
+        name: computerId
         required: true
         type: integer
       - description: 変更したい電源状態

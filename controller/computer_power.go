@@ -37,10 +37,10 @@ type SetPowerState struct {
 // @Summary コンピュータの電源状態を取得
 // @Tags power
 // @Produce json
-// @Param id path int true "Computer ID"
+// @Param computerId path int true "Computer ID"
 // @Success 200 {object} GetPowerState
 // @Failure 404 {object} ResError
-// @Router /computers/{id}/power [get]
+// @Router /computers/{computerId}/power [get]
 func GetPower(c echo.Context) error {
 	computer, err := FindComputerById(c)
 	if err != nil {
@@ -84,12 +84,12 @@ func getPowerState(c echo.Context, computer *models.Computer) (string, error) {
 // @Tags power
 // @Accept json
 // @Produce json
-// @Param id path int true "Computer ID"
+// @Param computerId path int true "Computer ID"
 // @Param request body SetPowerState true "変更したい電源状態"
 // @Success 200 {object} ResBool
 // @Failure 400 {object} ResError
 // @Failure 404 {object} ResError
-// @Router /computers/{id}/power [put]
+// @Router /computers/{computerId}/power [put]
 func UpdatePower(c echo.Context) error {
 	s := new(SetPowerState)
 	if err := c.Bind(s); err == nil {

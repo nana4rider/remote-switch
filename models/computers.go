@@ -24,7 +24,7 @@ import (
 
 // Computer is an object representing the database table.
 type Computer struct {
-	ID         int         `boil:"id" json:"id" toml:"id" yaml:"id"`
+	ComputerID int         `boil:"computer_id" json:"computer_id" toml:"computer_id" yaml:"computer_id"`
 	Name       string      `boil:"name" json:"name" toml:"name" yaml:"name"`
 	SSHUser    null.String `boil:"ssh_user" json:"ssh_user,omitempty" toml:"ssh_user" yaml:"ssh_user,omitempty" swaggertype:"string"`
 	SSHKey     null.String `boil:"ssh_key" json:"ssh_key,omitempty" toml:"ssh_key" yaml:"ssh_key,omitempty" swaggertype:"string"`
@@ -37,7 +37,7 @@ type Computer struct {
 }
 
 var ComputerColumns = struct {
-	ID         string
+	ComputerID string
 	Name       string
 	SSHUser    string
 	SSHKey     string
@@ -45,7 +45,7 @@ var ComputerColumns = struct {
 	IPAddress  string
 	MacAddress string
 }{
-	ID:         "id",
+	ComputerID: "computer_id",
 	Name:       "name",
 	SSHUser:    "ssh_user",
 	SSHKey:     "ssh_key",
@@ -55,7 +55,7 @@ var ComputerColumns = struct {
 }
 
 var ComputerTableColumns = struct {
-	ID         string
+	ComputerID string
 	Name       string
 	SSHUser    string
 	SSHKey     string
@@ -63,7 +63,7 @@ var ComputerTableColumns = struct {
 	IPAddress  string
 	MacAddress string
 }{
-	ID:         "computers.id",
+	ComputerID: "computers.computer_id",
 	Name:       "computers.name",
 	SSHUser:    "computers.ssh_user",
 	SSHKey:     "computers.ssh_key",
@@ -169,7 +169,7 @@ func (w whereHelpernull_Int) IsNull() qm.QueryMod    { return qmhelper.WhereIsNu
 func (w whereHelpernull_Int) IsNotNull() qm.QueryMod { return qmhelper.WhereIsNotNull(w.field) }
 
 var ComputerWhere = struct {
-	ID         whereHelperint
+	ComputerID whereHelperint
 	Name       whereHelperstring
 	SSHUser    whereHelpernull_String
 	SSHKey     whereHelpernull_String
@@ -177,7 +177,7 @@ var ComputerWhere = struct {
 	IPAddress  whereHelperstring
 	MacAddress whereHelperstring
 }{
-	ID:         whereHelperint{field: "`computers`.`id`"},
+	ComputerID: whereHelperint{field: "`computers`.`computer_id`"},
 	Name:       whereHelperstring{field: "`computers`.`name`"},
 	SSHUser:    whereHelpernull_String{field: "`computers`.`ssh_user`"},
 	SSHKey:     whereHelpernull_String{field: "`computers`.`ssh_key`"},
@@ -203,10 +203,10 @@ func (*computerR) NewStruct() *computerR {
 type computerL struct{}
 
 var (
-	computerAllColumns            = []string{"id", "name", "ssh_user", "ssh_key", "ssh_port", "ip_address", "mac_address"}
+	computerAllColumns            = []string{"computer_id", "name", "ssh_user", "ssh_key", "ssh_port", "ip_address", "mac_address"}
 	computerColumnsWithoutDefault = []string{"name", "ssh_user", "ssh_key", "ssh_port", "ip_address", "mac_address"}
-	computerColumnsWithDefault    = []string{"id"}
-	computerPrimaryKeyColumns     = []string{"id"}
+	computerColumnsWithDefault    = []string{"computer_id"}
+	computerPrimaryKeyColumns     = []string{"computer_id"}
 	computerGeneratedColumns      = []string{}
 )
 
@@ -501,7 +501,7 @@ func Computers(mods ...qm.QueryMod) computerQuery {
 
 // FindComputer retrieves a single record by ID with an executor.
 // If selectCols is empty Find will return all columns.
-func FindComputer(ctx context.Context, exec boil.ContextExecutor, iD int, selectCols ...string) (*Computer, error) {
+func FindComputer(ctx context.Context, exec boil.ContextExecutor, computerID int, selectCols ...string) (*Computer, error) {
 	computerObj := &Computer{}
 
 	sel := "*"
@@ -509,10 +509,10 @@ func FindComputer(ctx context.Context, exec boil.ContextExecutor, iD int, select
 		sel = strings.Join(strmangle.IdentQuoteSlice(dialect.LQ, dialect.RQ, selectCols), ",")
 	}
 	query := fmt.Sprintf(
-		"select %s from `computers` where `id`=?", sel,
+		"select %s from `computers` where `computer_id`=?", sel,
 	)
 
-	q := queries.Raw(query, iD)
+	q := queries.Raw(query, computerID)
 
 	err := q.Bind(ctx, exec, computerObj)
 	if err != nil {
@@ -606,13 +606,13 @@ func (o *Computer) Insert(ctx context.Context, exec boil.ContextExecutor, column
 		return ErrSyncFail
 	}
 
-	o.ID = int(lastID)
-	if lastID != 0 && len(cache.retMapping) == 1 && cache.retMapping[0] == computerMapping["id"] {
+	o.ComputerID = int(lastID)
+	if lastID != 0 && len(cache.retMapping) == 1 && cache.retMapping[0] == computerMapping["computer_id"] {
 		goto CacheNoHooks
 	}
 
 	identifierCols = []interface{}{
-		o.ID,
+		o.ComputerID,
 	}
 
 	if boil.IsDebug(ctx) {
@@ -764,7 +764,7 @@ func (o ComputerSlice) UpdateAll(ctx context.Context, exec boil.ContextExecutor,
 }
 
 var mySQLComputerUniqueColumns = []string{
-	"id",
+	"computer_id",
 	"ip_address",
 	"mac_address",
 }
@@ -883,8 +883,8 @@ func (o *Computer) Upsert(ctx context.Context, exec boil.ContextExecutor, update
 		return ErrSyncFail
 	}
 
-	o.ID = int(lastID)
-	if lastID != 0 && len(cache.retMapping) == 1 && cache.retMapping[0] == computerMapping["id"] {
+	o.ComputerID = int(lastID)
+	if lastID != 0 && len(cache.retMapping) == 1 && cache.retMapping[0] == computerMapping["computer_id"] {
 		goto CacheNoHooks
 	}
 
@@ -926,7 +926,7 @@ func (o *Computer) Delete(ctx context.Context, exec boil.ContextExecutor) (int64
 	}
 
 	args := queries.ValuesFromMapping(reflect.Indirect(reflect.ValueOf(o)), computerPrimaryKeyMapping)
-	sql := "DELETE FROM `computers` WHERE `id`=?"
+	sql := "DELETE FROM `computers` WHERE `computer_id`=?"
 
 	if boil.IsDebug(ctx) {
 		writer := boil.DebugWriterFrom(ctx)
@@ -1023,7 +1023,7 @@ func (o ComputerSlice) DeleteAll(ctx context.Context, exec boil.ContextExecutor)
 // Reload refetches the object from the database
 // using the primary keys with an executor.
 func (o *Computer) Reload(ctx context.Context, exec boil.ContextExecutor) error {
-	ret, err := FindComputer(ctx, exec, o.ID)
+	ret, err := FindComputer(ctx, exec, o.ComputerID)
 	if err != nil {
 		return err
 	}
@@ -1062,16 +1062,16 @@ func (o *ComputerSlice) ReloadAll(ctx context.Context, exec boil.ContextExecutor
 }
 
 // ComputerExists checks if the Computer row exists.
-func ComputerExists(ctx context.Context, exec boil.ContextExecutor, iD int) (bool, error) {
+func ComputerExists(ctx context.Context, exec boil.ContextExecutor, computerID int) (bool, error) {
 	var exists bool
-	sql := "select exists(select 1 from `computers` where `id`=? limit 1)"
+	sql := "select exists(select 1 from `computers` where `computer_id`=? limit 1)"
 
 	if boil.IsDebug(ctx) {
 		writer := boil.DebugWriterFrom(ctx)
 		fmt.Fprintln(writer, sql)
-		fmt.Fprintln(writer, iD)
+		fmt.Fprintln(writer, computerID)
 	}
-	row := exec.QueryRowContext(ctx, sql, iD)
+	row := exec.QueryRowContext(ctx, sql, computerID)
 
 	err := row.Scan(&exists)
 	if err != nil {

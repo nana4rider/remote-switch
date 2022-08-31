@@ -16,13 +16,13 @@ func NewRouter() (*echo.Echo, error) {
 
 	r.GET("/computers", controller.FindAllComputers)
 
-	r.GET("/computers/:id", controller.FindComputer)
+	r.GET("/computers/:computerId", controller.FindComputer)
 	r.POST("/computers", controller.CreateComputer)
-	r.PUT("/computers/:id", controller.UpdateComputer)
-	r.DELETE("/computers/:id", controller.DeleteComputer)
+	r.PUT("/computers/:computerId", controller.UpdateComputer)
+	r.DELETE("/computers/:computerId", controller.DeleteComputer)
 
-	r.GET("/computers/:id/power", controller.GetPower)
-	r.PUT("/computers/:id/power", controller.UpdatePower)
+	r.GET("/computers/:computerId/power", controller.GetPower)
+	r.PUT("/computers/:computerId/power", controller.UpdatePower)
 
 	return e, nil
 }
