@@ -14,7 +14,7 @@ import (
 // @description PCの電源をON/OFFするためのAPIです
 // @license.name ISC
 // @license.url https://licenses.opensource.jp/ISC/ISC.html
-// @host localhost:8080
+// @host raspberrypi:3005
 // @BasePath /v1
 func main() {
 	if err := config.Load(); err != nil {

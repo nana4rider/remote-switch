@@ -12,6 +12,8 @@ func NewRouter() (*echo.Echo, error) {
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 
+	e.Static("/docs", "docs")
+
 	r := e.Group("/v1")
 
 	r.GET("/computers", controller.FindAllComputers)
