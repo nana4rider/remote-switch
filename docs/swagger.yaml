@@ -62,7 +62,7 @@ definitions:
       ssh_user:
         type: string
     type: object
-host: raspberrypi1.local:3005
+host: localhost.local:8080
 info:
   contact: {}
   description: PCの電源をON/OFFするためのAPIです
