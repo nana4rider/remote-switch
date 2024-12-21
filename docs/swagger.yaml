@@ -1,6 +1,6 @@
 basePath: /v1
 definitions:
-  controller.GetPowerState:
+  handler.GetPowerState:
     properties:
       state:
         enum:
@@ -8,35 +8,35 @@ definitions:
         - "OFF"
         type: string
     type: object
-  controller.ResBool:
+  handler.ResBool:
     properties:
       message:
         type: string
       result:
         type: boolean
     type: object
-  controller.ResError:
+  handler.ResError:
     properties:
       message:
         type: string
     type: object
-  controller.ResValidationError:
+  handler.ResValidationError:
     properties:
       message:
         type: string
       validationErrors:
         items:
-          $ref: '#/definitions/controller.ResValidationErrorDetail'
+          $ref: '#/definitions/handler.ResValidationErrorDetail'
         type: array
     type: object
-  controller.ResValidationErrorDetail:
+  handler.ResValidationErrorDetail:
     properties:
       message:
         type: string
       param:
         type: string
     type: object
-  controller.SetPowerState:
+  handler.SetPowerState:
     properties:
       state:
         enum:
@@ -86,7 +86,7 @@ paths:
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/controller.ResError'
+            $ref: '#/definitions/handler.ResError'
       summary: コンピュータの一覧を取得
       tags:
       - computer
@@ -107,7 +107,7 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/controller.ResValidationError'
+            $ref: '#/definitions/handler.ResValidationError'
       summary: コンピュータを登録
       tags:
       - computer
@@ -125,7 +125,7 @@ paths:
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/controller.ResError'
+            $ref: '#/definitions/handler.ResError'
       summary: コンピュータを削除
       tags:
       - computer
@@ -146,7 +146,7 @@ paths:
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/controller.ResError'
+            $ref: '#/definitions/handler.ResError'
       summary: コンピュータの詳細を取得
       tags:
       - computer
@@ -172,7 +172,7 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/controller.ResValidationError'
+            $ref: '#/definitions/handler.ResValidationError'
       summary: コンピュータを更新
       tags:
       - computer
@@ -190,11 +190,11 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/controller.GetPowerState'
+            $ref: '#/definitions/handler.GetPowerState'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/controller.ResError'
+            $ref: '#/definitions/handler.ResError'
       summary: コンピュータの電源状態を取得
       tags:
       - power
@@ -212,22 +212,22 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/controller.SetPowerState'
+          $ref: '#/definitions/handler.SetPowerState'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/controller.ResBool'
+            $ref: '#/definitions/handler.ResBool'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/controller.ResError'
+            $ref: '#/definitions/handler.ResError'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/controller.ResError'
+            $ref: '#/definitions/handler.ResError'
       summary: コンピュータの電源状態を変更
       tags:
       - power
