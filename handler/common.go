@@ -1,4 +1,4 @@
-package controller
+package handler
 
 type ResError struct {
 	Message string `json:"message"`
